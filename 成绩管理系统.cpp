@@ -158,10 +158,11 @@ int main()
 	//	std::cout << stu.getId() << " " << stu.getName() << " " << stu.v_Score[0] << " " << stu.v_Score[1] << " " << stu.v_Score[2] << " " << stu.v_Score[3] << " " << stu.v_Score[4] << " " << stu.v_Score[5] << " "<<stu.getSumScore()<<std::endl;
 	//}
 
-	/*全校分班考试成绩初始化测试*/
+		/*全校分班考试成绩初始化测试*/
 	System s;
 	//s.School_Score();
 	s.Class_Score();
+	
 	
 	
 	

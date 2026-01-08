@@ -57,7 +57,7 @@ void System::Init_Vec(int select)
 	Class_One.clear();
 	Class_Two.clear();
 
-	//遍历系统容器中的学生，将学生按班级存放到两个班级容器中
+	//遍历系统容器中的学生，将学生按班级存放到两个班级容器中（过程中已同步学生信息到班级容器中）
 	for (Student& stu : v_Stu)
 	{
 		//学号总计13位，倒数第三位表示班级，最后两位表示学号
@@ -93,7 +93,7 @@ std::string System::Name_TwoToThree(std::string name)
 	return name;
 }
 
-//同步学校容器v_Stu到班级容器Class_One和Class_Two
+//同步信息：学校容器v_Stu到班级容器Class_One和Class_Two
 void System::Sync_Vec()
 {
 	//调用前清空班级容器，避免数据累积
@@ -199,7 +199,7 @@ void System::Sum_Sort()
 		}	
 	}
 
-	//同步班级容器
+	//同步学生信息到班级容器（班排名和校排名）
 	Sync_Vec(); 
 
 	//将总分排序结果写入文件SumSort.txt
@@ -337,7 +337,7 @@ void System::Class_Score()
 	//初始化系统容器(获得全校学生信息)
 	Init_Vec(select);
 
-	//同步班级容器
+	//同步学生信息到班级容器
 	Sync_Vec();
 
 	std::cout << "请选择要统计的班级（1.一班 2.二班）：\n";
@@ -346,7 +346,7 @@ void System::Class_Score()
 
 
 	//将班级map容器中学生成绩放入m_Score中
-	if (select == 1)	//一班
+	if (Class == 1)	//一班
 	{
 		for (const auto& ClassOne_Pair : Class_One)			//遍历一班这个容器获得value值
 		{
@@ -405,7 +405,7 @@ void System::Class_Score()
 	std::ofstream ofs;
 	ofs.open(CLASSSCORE, std::ios::out | std::ios::trunc);
 
-	ofs << "第" << select << "次考试学校成绩情况统计：\t\t参考总人数：" << m_Score[0].size() << "\n";
+	ofs << "第" << select << "次考试"<<Class<<"班成绩情况统计：\t\t参考总人数：" << m_Score[0].size() << "\n";
 	ofs << "科目\t\t\t\t\t\t\t语文\t\t数学\t\t英语\t\t物理\t\t化学\t\t政治\n";
 	std::string subjects[6] = { "各科分数平均分:","各科分数最低分:","各科分数最高分:","各科不及格人数:","各科优秀人数:","各科优秀率(%):" };
 
@@ -418,7 +418,7 @@ void System::Class_Score()
 			switch (i)
 			{
 			case 0:
-				ofs << s.getAverageScore()[j] << "\t";
+				ofs << std::fixed << std::setprecision(4) << s.getAverageScore()[j]  << "\t";
 				break;
 			case 1:
 				ofs << s.getLowestScore()[j] << "\t\t";
@@ -433,7 +433,7 @@ void System::Class_Score()
 				ofs << s.getExcellentCount()[j] << "\t\t";
 				break;
 			case 5:
-				ofs << s.getExcellentRate()[j] << "\t";
+				ofs << std::fixed << std::setprecision(4) << s.getExcellentRate()[j]  << "\t";
 				break;
 			default:
 				break;
