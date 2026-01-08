@@ -67,7 +67,7 @@ public:
 	//如果姓名是两个字，用空格在中间补齐成三个字大小（补齐格式）
 	std::string Name_TwoToThree(std::string name);
 
-	//将成绩容器v_Score转化为容纳六门科目的map容器 key：0-5科目数 value 学生六门成绩
+	//将成绩容器转化为容纳六门科目的map容器 key：0-5科目数 value 学生六门成绩
 	std::map<int, std::vector<int>> m_Score;
 
 	//析构函数

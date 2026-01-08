@@ -324,7 +324,124 @@ void System::School_Score()
 //班级成绩情况
 void System::Class_Score()
 {
+	//清空班级容器，避免数据累积
+	Class_One.clear();
+	Class_Two.clear();
+	m_Score.clear();
 
+	//选择考试
+	std::cout << "请输入要统计班级成绩情况的考试（1.第一次考试 2.第二次考试）：\n";
+	int select = 0;
+	std::cin >> select;
+
+	//初始化系统容器(获得全校学生信息)
+	Init_Vec(select);
+
+	//同步班级容器
+	Sync_Vec();
+
+	std::cout << "请选择要统计的班级（1.一班 2.二班）：\n";
+	int Class = 0;
+	std::cin >> Class;
+
+
+	//将班级map容器中学生成绩放入m_Score中
+	if (select == 1)	//一班
+	{
+		for (const auto& ClassOne_Pair : Class_One)			//遍历一班这个容器获得value值
+		{
+			const std::vector<Student>& StuVec = ClassOne_Pair.second;
+			for (const Student& stu : StuVec)				//遍历一班每个学生
+				for (int i = 0; i < 6; i++)					//遍历六门科目
+					m_Score[i].push_back(stu.v_Score[i]);	//将学生的六门成绩放入成绩容器中
+		}
+	}
+	else			//二班
+	{
+		for (const auto& ClassTwo_Pair : Class_Two)
+		{
+			const std::vector<Student>& StuVec = ClassTwo_Pair.second;
+			for (const Student& stu : StuVec)
+				for (int i = 0; i < 6; i++)
+					m_Score[i].push_back(stu.v_Score[i]);
+		}
+	}
+
+	//创建情况对象(自动调用无参构造清空数据)
+	Situation s;
+
+	//计算各项数据并存放到情况对象中
+	for (int i = 0; i < 6; i++)			//遍历六门科目
+	{
+		for (int score : m_Score[i])	//遍历学生个体的成绩
+		{
+			//计算当前科目总分
+			s.setAverageScore()[i] += score;
+			//计算最高分
+			if (score > s.getHighestScore()[i])
+				s.setHighestScore()[i] = score;
+			//计算最低分
+			if (score < s.getLowestScore()[i])
+				s.setLowestScore()[i] = score;
+			//计算不及格人数
+			if (score < 60)
+				s.setFailCount()[i]++;
+			//计算优秀人数
+			if (score >= 85)
+				s.setExcellentCount()[i]++;
+		}
+	}
+
+	for (int i = 0; i < 6; i++)		//计算各科平均分和优秀率
+	{
+		//计算各科平均分
+		s.setAverageScore()[i] /= m_Score[i].size();
+
+		//计算各科优秀率
+		s.setExcellentRate()[i] = (static_cast<double>(s.getExcellentCount()[i]) / m_Score[i].size()) * 100.0;
+	}
+
+	//将班级成绩情况写入文件Class_Score.txt
+	std::ofstream ofs;
+	ofs.open(CLASSSCORE, std::ios::out | std::ios::trunc);
+
+	ofs << "第" << select << "次考试学校成绩情况统计：\t\t参考总人数：" << m_Score[0].size() << "\n";
+	ofs << "科目\t\t\t\t\t\t\t语文\t\t数学\t\t英语\t\t物理\t\t化学\t\t政治\n";
+	std::string subjects[6] = { "各科分数平均分:","各科分数最低分:","各科分数最高分:","各科不及格人数:","各科优秀人数:","各科优秀率(%):" };
+
+	//依次输出各科平均分、最低分、最高分、不及格人数、优秀人数、优秀率
+	for (int i = 0; i < 6; i++)
+	{
+		ofs << subjects[i] << "\t\t\t\t\t";
+		for (int j = 0; j < 6; j++)
+		{
+			switch (i)
+			{
+			case 0:
+				ofs << s.getAverageScore()[j] << "\t";
+				break;
+			case 1:
+				ofs << s.getLowestScore()[j] << "\t\t";
+				break;
+			case 2:
+				ofs << s.getHighestScore()[j] << "\t\t";
+				break;
+			case 3:
+				ofs << s.getFailCount()[j] << "\t\t";
+				break;
+			case 4:
+				ofs << s.getExcellentCount()[j] << "\t\t";
+				break;
+			case 5:
+				ofs << s.getExcellentRate()[j] << "\t";
+				break;
+			default:
+				break;
+			}
+		}
+		ofs << "\n";
+	}
+	ofs.close();
 }
 
 //查询功能
