@@ -36,6 +36,7 @@ public:
 
 	//7.查看挂科名单
 
+	virtual ~Identity() {}
 private:
 	std::string m_Name;		//姓名
 	std::string m_Pwd;		//密码
