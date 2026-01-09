@@ -148,7 +148,7 @@ void System::Calculate_Rank(int select)
 		classOne_rank = 0;
 	}
 
-	for (int i = 1; i < v_Stu.size(); ++i)
+	for (size_t i = 1; i < v_Stu.size(); ++i)
 	{
 		if (v_Stu[i].getSumScore() == v_Stu[i - 1].getSumScore())
 		{
