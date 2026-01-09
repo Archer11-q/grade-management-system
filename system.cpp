@@ -470,7 +470,7 @@ void System::Search()
 	int choice = 0;
 	std::cin >> choice;
 
-	if(choice==1)
+	if (choice == 1)
 		std::cout << "请输入要查询的学号（支持模糊查询）：\n";
 	else
 		std::cout << "请输入要查询的姓名（支持模糊查询）：\n";
@@ -478,7 +478,7 @@ void System::Search()
 	std::string temp;			//接收查询关键字
 	std::cin >> temp;			//用户输入查询关键字
 
-	
+
 	int index = 1;				//控制第一次输出格式
 
 	//查询到的信息写入文件
@@ -496,8 +496,8 @@ void System::Search()
 	for (int i = 0; i < 2; i++)		//遍历两次考试
 	{
 		//初始化容器获取全校学生信息
-		Init_Vec(i+1);				//初始化考试信息(第i+1次考试成绩信息同步)	
-		Calculate_Rank(i+1);		//同步学生学习班级排名和校排名
+		Init_Vec(i + 1);				//初始化考试信息(第i+1次考试成绩信息同步)	
+		Calculate_Rank(i + 1);		//同步学生学习班级排名和校排名
 
 		//遍历全校学生容器，进行模糊查询
 		for (Student& stu : v_Stu)
