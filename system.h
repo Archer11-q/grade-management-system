@@ -11,7 +11,9 @@
 #include<string>
 #include"situation.hpp"
 #include <iomanip>			//提供setw/setprecision/fixed调整输出格式
+<<<<<<< HEAD
 #include<set>
+
 
 //系统类：
 //主要职责：1.进行总分排序（两个班放一起排序，显示班排名和校排名）
