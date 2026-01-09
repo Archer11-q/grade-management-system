@@ -43,6 +43,9 @@ public:
 	//获得班级
 	int getClass() { return Class; }
 
+	//获得缺考状态
+	bool getIsAbsent() { return Is_Absent; }
+
 	//设置学生学号
 	void setId(std::string id) { this->Id = id; }
 
@@ -58,6 +61,9 @@ public:
 	//设置班级
 	void setClass(int cls) { this->Class = cls; }
 
+	//设置缺考状态
+	void setIsAbsent(bool status) { this->Is_Absent = status; }
+
 	std::vector<int> v_Score;			//记录六门科目的容器
 
 private:
@@ -68,6 +74,7 @@ private:
 	int School_Rank;	//学校排名
 	int Sum_Score;		//总成绩
 
+	bool Is_Absent;		//缺考状态
 	bool Is_Pass;		//及格状态
 	bool Is_Excellent;	//优秀状态
 };

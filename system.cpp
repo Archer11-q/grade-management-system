@@ -526,10 +526,48 @@ void System::Search()
 	ofs.close();
 }
 
-//缺考名单统计
+//缺考名单统计（第一次考试全员参加，第二次考试部分参加，即为缺考）
 void System::Absence_List()
 {
+	//创建两个vector容器存放两次考试的学生
+	std::vector<Student> firstExam_Students;
+	std::vector<Student> secondExam_Students;
 
+	//初始化第二次考试学生容器
+	Init_Vec(2);
+	secondExam_Students = v_Stu;		//将第二次考试学生信息存放到容器中
+
+	//初始化第一次考试学生容器
+	Init_Vec(1);
+	firstExam_Students = v_Stu;			//将第一次考试学生信息存放到容器中
+
+	//遍历第一次考试学生容器，通过与参加第二次考试学生容器对比，找出缺考学生
+	for (Student& firstStu : firstExam_Students)
+	{
+		bool isAbsent = true;		//假设该学生缺考
+		for (Student& secondStu : secondExam_Students)
+		{
+			if (firstStu.getId() == secondStu.getId())	//该学生参加了第二次考试
+			{
+				isAbsent = false;	//该学生未缺考
+				break;
+			}
+		}
+		if (isAbsent)	//该学生缺考，输出缺考信息
+		{
+			//将缺考学生信息写入文件Absence_List.txt
+			std::ofstream ofs;
+			ofs.open(ABSENCELIST, std::ios::out | std::ios::app); //以追加方式打开文件
+			if (!ofs.is_open())
+			{
+				std::cout << "文件打开失败！\n";
+				ofs.close();
+				return;
+			}
+			ofs << "姓名：" << firstStu.getName() << "\t学号：" << firstStu.getId() << "\t班级：" << firstStu.getClass() << "\t缺考科目：全部科目\t分数：0\n";
+			ofs.close();
+		}
+	}
 }
 
 //挂科名单统计

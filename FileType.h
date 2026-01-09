@@ -15,3 +15,4 @@
 #define SCHOOLSCORE "School_Score.txt"	//学校情况
 #define CLASSSCORE	"Class_Score.txt"	//班级情况
 #define SEARCHRESULT "SearchResult.txt"	//查询结果文件
+#define ABSENCELIST "Absence_List.txt"	//缺考名单文件
