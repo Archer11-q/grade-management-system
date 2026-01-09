@@ -11,6 +11,7 @@
 #define SOURCE1	"source1.txt"			//第一次考试成绩文件
 #define SOURCE2	"source2.txt"			//第二次考试成绩文件
 
-#define SUMSORTONE "SumSort.txt"		//考试总分排序结果文件
-#define SCHOOLSCORE "School_Score.txt"		//学校情况
-#define CLASSSCORE	"Class_Score.txt"		//班级情况
+#define SUMSORT "SumSort.txt"			//考试总分排序结果文件
+#define SCHOOLSCORE "School_Score.txt"	//学校情况
+#define CLASSSCORE	"Class_Score.txt"	//班级情况
+#define SEARCHRESULT "SearchResult.txt"	//查询结果文件

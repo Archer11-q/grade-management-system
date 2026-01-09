@@ -161,7 +161,7 @@ int main()
 		/*全校分班考试成绩初始化测试*/
 	System s;
 	//s.School_Score();
-	s.Class_Score();
+	s.Search();
 	
 	
 	

@@ -31,7 +31,7 @@ void System::Init_Vec(int select)
 		Student stu;
 
 		//先将读取的学号和姓名传给学生对象
-		stu.setName(Name_TwoToThree(fName));
+		stu.setName(Name_TwoToThree(fName));		//处理姓名格式（姓名两个字用空格补齐）
 		stu.setId(fId);
 
 		//再将六门成绩存放到学生对象的容器中
@@ -120,16 +120,11 @@ public:
 	}
 };
 
-//总分排序函数(包含班级排名和学校排名)
-void System::Sum_Sort()
+//计算班级排名和学校排名
+void System::Calculate_Rank(int select)
 {
-	std::cout << "请选择要进行总分排序的考试（1.第一次考试 2.第二次考试）：\n";
-	int select = 0;
-	std::cin >> select;
-
 	//初始化系统容器
 	Init_Vec(select);
-
 
 	//先对系统容器中的学生进行总分排序(总分降序)
 	std::sort(v_Stu.begin(), v_Stu.end(), SumSort());
@@ -160,14 +155,14 @@ void System::Sum_Sort()
 			//与前一名同学总分相同，排名相同
 			v_Stu[i].setSchoolRank(v_Stu[i - 1].getSchoolRank());
 			++school_rank;
-		}	
+		}
 		else
 		{
 			++school_rank;
 			//与前一名同学总分不同，排名递增
 			v_Stu[i].setSchoolRank(school_rank);
 		}
-			
+
 
 		//赋予班级排名
 		if (v_Stu[i].getClass() == 1)
@@ -182,43 +177,67 @@ void System::Sum_Sort()
 			{
 				++classOne_rank;
 				v_Stu[i].setClassRank(classOne_rank);
-			}	
-		}	
+			}
+		}
 		else
 		{
 			if (v_Stu[i].getSumScore() == v_Stu[i - 1].getSumScore() && v_Stu[i].getClass() == v_Stu[i - 1].getClass())
 			{
 				v_Stu[i].setClassRank(v_Stu[i - 1].getClassRank());
 				++classTwo_rank;
-			}		
+			}
 			else
 			{
 				++classTwo_rank;
 				v_Stu[i].setClassRank(classTwo_rank);
-			}	
-		}	
+			}
+		}
 	}
 
 	//同步学生信息到班级容器（班排名和校排名）
-	Sync_Vec(); 
+	Sync_Vec();
+}
 
-	//将总分排序结果写入文件SumSort.txt
-	//用写的方式打开文件，若文件不存在则创建
-	std::ofstream ofs;		
-	ofs.open(SUMSORTONE, std::ios::out | std::ios::trunc);
+//总分排序函数(包含班级排名和学校排名)
+void System::Sum_Sort()
+{
+	std::cout << "请选择要进行总分排序的考试（1.第一次考试 2.第二次考试）：\n";
+	int select = 0;
+	std::cin >> select;
 
-	ofs << "姓名：\t\t学号：\t\t\t\t语文\t数学\t英语\t物理\t化学\t政治\t总分\t校排名\t班排名\n";
-	for (Student& stu : v_Stu)
-	{
-		ofs << stu.getName() << "\t\t" << stu.getId() << "\t\t";
-		for (int score : stu.v_Score)
-		{
-			ofs << score << "\t";
-		}
-		ofs << stu.getSumScore() << "\t" << stu.getSchoolRank() << "\t\t" << stu.getClassRank() << "\n";
+	//判断输入是否合法
+	while (select != 1 && select != 2) {
+		std::cout << "输入非法！请选择1或2：\n";
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		std::cin >> select;
 	}
 
-	ofs.close();
+	try{
+		//调用提取的排名方法
+		Calculate_Rank(select);
+
+		//将总分排序结果写入文件SumSort.txt
+		//用写的方式打开文件，若文件不存在则创建
+		std::ofstream ofs;
+		ofs.open(SUMSORT, std::ios::out | std::ios::trunc);
+
+		ofs << "姓名：\t\t学号：\t\t\t\t语文\t数学\t英语\t物理\t化学\t政治\t总分\t校排名\t班排名\n";
+		for (Student& stu : v_Stu)
+		{
+			ofs << stu.getName() << "\t\t" << stu.getId() << "\t\t";
+			for (int score : stu.v_Score)
+			{
+				ofs << score << "\t";
+			}
+			ofs << stu.getSumScore() << "\t" << stu.getSchoolRank() << "\t\t" << stu.getClassRank() << "\n";
+
+			ofs.close();
+		}
+	}
+	catch (const std::runtime_error& e) {
+		std::cout << "排序失败：" << e.what() << std::endl;
+	}
 }
 
 //学校成绩情况(某一次考试全校各科平均分、最低分、最高分、不及格人数、优秀人数、优秀率）
@@ -444,10 +463,67 @@ void System::Class_Score()
 	ofs.close();
 }
 
-//查询功能
+//查询功能(支持学号/姓名模糊查询考试成绩)
 void System::Search()
 {
+	std::cout << "请输入您的查询方式（1.按学号查询 2.按姓名查询）：\n";
+	int choice = 0;
+	std::cin >> choice;
 
+	if(choice==1)
+		std::cout << "请输入要查询的学号（支持模糊查询）：\n";
+	else
+		std::cout << "请输入要查询的姓名（支持模糊查询）：\n";
+
+	std::string temp;			//接收查询关键字
+	std::cin >> temp;			//用户输入查询关键字
+
+	
+	int index = 1;				//控制第一次输出格式
+
+	//查询到的信息写入文件
+	std::ofstream ofs;
+	ofs.open(SEARCHRESULT, std::ios::out | std::ios::trunc);
+
+	//文件打开失败处理
+	if (!ofs.is_open())
+	{
+		std::cout << "文件打开失败！\n";
+		ofs.close();
+		return;
+	}
+
+	for (int i = 0; i < 2; i++)		//遍历两次考试
+	{
+		//初始化容器获取全校学生信息
+		Init_Vec(i+1);				//初始化考试信息(第i+1次考试成绩信息同步)	
+		Calculate_Rank(i+1);		//同步学生学习班级排名和校排名
+
+		//遍历全校学生容器，进行模糊查询
+		for (Student& stu : v_Stu)
+		{
+			if (stu.getId().find(temp) != std::string::npos ||
+				stu.getName().find(temp) != std::string::npos)	//模糊查询学号或姓名
+			{
+				if ((index == 1 && i == 0) || (index == 2 && i == 1))	//控制第一次输出格式
+				{
+					if (index == 1 && i == 1)
+						ofs << "查询成功！查询结果如下：\n";
+					ofs << "=====第" << index << "次考试成绩如下======\n";
+					ofs << "姓名：\t\t学号：\t\t\t\t语文\t数学\t英语\t物理\t化学\t政治\t总分\t校排名\t班排名\n";
+					index++;
+				}
+				ofs << stu.getName() << "\t\t" << stu.getId() << "\t\t";
+				for (int score : stu.v_Score)
+				{
+					ofs << score << "\t";
+				}
+				ofs << stu.getSumScore() << "\t" << stu.getSchoolRank() << "\t\t" << stu.getClassRank() << "\n\n\n";
+			}
+		}
+	}
+
+	ofs.close();
 }
 
 //缺考名单统计

@@ -62,6 +62,9 @@ public:
 	//初始化容器
 	void Init_Vec(int select);		//select接收某一次考试
 
+	//计算班级排名和学校排名	参数：select：选择某一次考试
+	void Calculate_Rank(int select);
+
 	//同步学校容器v_Stu到班级容器Class_One和Class_Two
 	void Sync_Vec();
 
