@@ -11,3 +11,5 @@ Release/
 .enc
 grade_manage
 Absence_List.txt
+*.o
+student_manager
