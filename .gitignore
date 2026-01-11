@@ -13,3 +13,10 @@ grade_manage
 Absence_List.txt
 *.o
 student_manager
+# 忽略不需要上传的文件
+Absence_List.txt
+成绩管理系统.cpp
+成绩管理系统.vcxproj
+成绩管理系统.vcxproj.user
+Excellent_List.txt
+Fail_List.txt
