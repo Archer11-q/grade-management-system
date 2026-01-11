@@ -16,3 +16,5 @@
 #define CLASSSCORE	"Class_Score.txt"	//班级情况
 #define SEARCHRESULT "SearchResult.txt"	//查询结果文件
 #define ABSENCELIST "Absence_List.txt"	//缺考名单文件
+#define FAILLIST "Fail_List.txt"		//挂科名单文件
+#define EXCELLENTLIST "Excellent_List.txt" //优秀名单文件
