@@ -43,6 +43,12 @@ public:
 	//获得班级
 	int getClass() { return Class; }
 
+	//获取学校排名变化情况
+	int getChangeSchoolRank() { return Change_School_Rank; }
+
+	//获取班级排名变化情况
+	int getChangeClassRank() { return Change_Class_Rank; }
+
 	//设置学生学号
 	void setId(std::string id) { this->Id = id; }
 
@@ -58,13 +64,21 @@ public:
 	//设置班级
 	void setClass(int cls) { this->Class = cls; }
 
+	//设置学校排名变化情况
+	void setChangeSchoolRank(int rank) { this->Change_School_Rank = rank; }
+
+	//设置班级排名变化情况
+	void setChangeClassRank(int rank) { this->Change_Class_Rank = rank; }
+
 	std::vector<int> v_Score;			//记录六门科目的容器
 
 private:
 	std::string Id;		//学号2024034743xxx(倒数第三位0：1班，1：2班；后两位：学号)
 
-	int Class;			//班级
-	int Class_Rank;		//班级排名
-	int School_Rank;	//学校排名
-	int Sum_Score;		//总成绩
+	int Class;				//班级
+	int Class_Rank;			//班级排名
+	int School_Rank;		//学校排名
+	int Sum_Score;			//总成绩
+	int Change_Class_Rank;	//班级排名变化情况
+	int Change_School_Rank;	//学校排名变化情况
 };

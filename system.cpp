@@ -706,8 +706,72 @@ void System::Excellent_List()
 //成绩进退步情况统计
 void System::Progress_List()
 {
-
+	//初始化两次考试的学生容器
+	std::vector<Student> firstExam_Students;
+	std::vector<Student> secondExam_Students;
+	//初始化第一次考试学生容器
+	Init_Vec(1);
+	Calculate_Rank(1);		//计算第一次考试班级排名和学校排名
+	firstExam_Students = v_Stu;			//将第一次考试学生信息存放到容器中
+	//初始化第二次考试学生容器
+	Init_Vec(2);
+	Calculate_Rank(2);		//计算第二次考试班级排名和学校排名
+	secondExam_Students = v_Stu;		//将第二次考试学生信息存放到容器中
+	//将成绩进步和退步的学生信息写入文件Progress_List.txt
+	std::ofstream ofs;
+	ofs.open(PROGRESSLIST, std::ios::out | std::ios::trunc);		 //以覆盖方式打开文件
+	if (!ofs.is_open())
+	{
+		std::cout << "文件打开失败！\n";
+		ofs.close();
+		return;
+	}
+	ofs << "成绩进步名单：\n";
+	ofs << "姓名\t\t学号\t\t\t\t第一次考试班级排名\t第二次考试班级排名\t第一次考试学校排名\t"
+		<<"第二次考试学校排名\t班级排名变化\t学校排名变化\n";
+	for (Student& firstStu : firstExam_Students)
+	{
+		for (Student& secondStu : secondExam_Students)
+		{
+			if (firstStu.getId() == secondStu.getId())	//找到同一学生
+			{
+				if (secondStu.getClassRank() > firstStu.getClassRank()) //班级排名退步
+				{
+					ofs << secondStu.getName() << "\t" << secondStu.getId()
+						<< "\t\t\t" << firstStu.getClassRank() << "\t\t\t" << secondStu.getClassRank()
+						<< "\t\t\t\t" << firstStu.getSchoolRank() << "\t\t\t\t" << secondStu.getSchoolRank()
+						<< "\t\t\t\t" << (firstStu.getClassRank() - secondStu.getClassRank())
+						<< "\t\t\t" << (firstStu.getSchoolRank() - secondStu.getSchoolRank()) << "\n";
+				}
+				break;
+			}
+		}
+	}
+	ofs << "\n\n成绩退步名单：\n";
+	ofs << "姓名\t\t学号\t\t\t\t第一次考试班级排名\t第二次考试班级排名\t第一次考试学校排名\t"
+		<< "第二次考试学校排名\t班级排名变化\t学校排名变化\n";
+	for (Student& firstStu : firstExam_Students)
+	{
+		for (Student& secondStu : secondExam_Students)
+		{
+			if (firstStu.getId() == secondStu.getId())	//找到同一学生
+			{
+				if (secondStu.getClassRank() < firstStu.getClassRank()) //班级排名进步
+				{
+					ofs << secondStu.getName() << "\t" << secondStu.getId()
+						<< "\t\t\t" << firstStu.getClassRank() << "\t\t\t" << secondStu.getClassRank()
+						<< "\t\t\t\t" << firstStu.getSchoolRank() << "\t\t\t\t" << secondStu.getSchoolRank()
+						<< "\t\t\t\t" << (firstStu.getClassRank() - secondStu.getClassRank())
+						<< "\t\t\t" << (firstStu.getSchoolRank() - secondStu.getSchoolRank()) << "\n";
+				}
+				break;
+			}
+		}
+	}
+	ofs << "\n\n\n";
+	ofs.close();
 }
+
 
 //析构函数
 System::~System()

@@ -17,4 +17,6 @@ void Student::Init()
 	this->Class_Rank = 0;
 	this->School_Rank = 0;
 	this->Sum_Score = 0;
+	this->Change_School_Rank = 0;
+	this->Change_Class_Rank = 0;
 }
